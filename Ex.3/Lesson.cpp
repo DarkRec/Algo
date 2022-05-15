@@ -119,6 +119,21 @@ node *Connect_lists(node *&H, node *&A) // Połączenie dwóch list w jedną (do
     }
 }
 
+void del_sec(node *&H)
+{
+    if (H != NULL)
+    {
+        node *p = H;
+        while (p->next != NULL)
+        {
+            node *e = p->next->next;
+            delete p->next;
+            p->next = e;
+            p = p->next;
+        }
+    }
+}
+
 int main()
 {
     node *H = NULL;
@@ -138,6 +153,9 @@ int main()
     Show(H1);
     Show(H2);
     H = Connect_lists(H1, H2);
+    Show(H);
+
+    del_sec(H);
     Show(H);
 
     return 0;

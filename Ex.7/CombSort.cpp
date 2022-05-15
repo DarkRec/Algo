@@ -84,37 +84,43 @@ void FarSwap(node *p, node *e)
     a->next = b;
 }
 
-void CombSort(node *H, int gap)
+node *CombSort(node *H, int gap)
 {
-    while (gap > 1)
+    if (gap == 0)
+        gap = 1;
+    if (gap > 1)
     {
         if (gap == 9 || gap == 10)
             gap = 11;
-        else if (gap == 0)
-            gap = 1;
 
-        if (gap == 1)
-            BubbleSort(H);
-        else
+        node *e = H;
+        node *b = H;
+        for (int n = 0; n < gap; n++)
         {
-            gap = gap / 1.3;
-            CombSort(H, gap);
+            e = e->next;
         }
+        while (e->next)
+        {
+            if (b->next->val > e->next->val)
+            {
+                FarSwap(e, b);
+            }
+            e = e->next;
+            b = b->next;
+        }
+        gap = gap / 1.3;
+        CombSort(H, gap - 1);
+    }
+    else if (gap == 1)
+    {
+        Del(H);
+        BubbleSort(H);
+        return H;
     }
 }
 
-int main()
+node *CombSortStart(node *H)
 {
-    node *H = NULL;
-    Add(H, 3);
-    Add(H, 15);
-    Add(H, 22);
-    Add(H, -6);
-    Add(H, 3);
-    Add(H, 4);
-    Add(H, 8);
-    Show(H);
-
     node *p = H;
     int n = 0;
     while (p)
@@ -122,5 +128,21 @@ int main()
         p = p->next;
         n++;
     }
-    CombSort(H, n);
+    Add(H, 0);
+    return CombSort(H, n - 1);
+}
+
+int main()
+{
+    node *H = NULL;
+    Add(H, 8);
+    Add(H, -6);
+    Add(H, 3);
+    Add(H, 4);
+    Add(H, 15);
+    Add(H, 5);
+    Add(H, 22);
+    Show(H);
+    H = CombSortStart(H);
+    Show(H);
 }

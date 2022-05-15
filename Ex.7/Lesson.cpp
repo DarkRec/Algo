@@ -22,7 +22,8 @@ void Show(node *H)
     node *p = H;
     while (p != NULL)
     {
-        cout << p->val << "->";
+
+        cout << "(" << p->val << ")->";
         p = p->next;
     }
     cout << "NULL" << endl;
@@ -50,38 +51,56 @@ void Split(node *&H, node *&H1, node *&H2)
     }
 }
 
-node *Merge(node *&H1, node *&H2)
+void AddAndShift(node *&tail, node *&src)
 {
-    node *H;
-    if (H1 == NULL)
-        return H2;
-    else if (H2 == NULL)
-        return H1;
+    tail->next = src;
+    tail = tail->next;
+    src = src->next;
+}
 
-    if (H1->val < H2->val)
+node *Merge(node *H, node *&H1, node *&H2) // Połączenie dwóch list w jedną (dodanie drugiej na koniec pierwszej)
+{
+    node *tmp1 = H1;
+    node *tmp2 = H2;
+
+    if (tmp1->val <= tmp2->val)
     {
-        H = H1;
-        H->next = Merge(H1->next, H2);
+        H = tmp1;
+        tmp1 = tmp1->next;
     }
     else
     {
-        H = H2;
-        H->next = Merge(H1, H2->next);
+        H = tmp2;
+        tmp2 = tmp2->next;
     }
-
-    return H;
+    node *tail = H;
+    while (tmp1 && tmp2)
+    {
+        if (tmp1->val <= tmp2->val)
+            AddAndShift(tail, tmp1);
+        else
+            AddAndShift(tail, tmp2);
+    }
+    if (tmp1)
+        tail->next = tmp1;
+    else
+        tail->next = tmp2;
+    H1 = NULL;
+    H2 = NULL;
+    return tail;
 }
 
-void MS(node *&H)
+void MS(node *H)
 {
     if (H->next)
     {
         node *H1 = NULL;
         node *H2 = NULL;
         Split(H, H1, H2);
+        H = NULL;
         MS(H1);
         MS(H2);
-        H = Merge(H1, H2);
+        H = Merge(H, H1, H2);
     }
 }
 
@@ -95,6 +114,7 @@ int main()
     Add(H, 2);
     Add(H, -8);
     Add(H, -3);
+    Add(H, -9);
     Show(H);
     MS(H);
     Show(H);

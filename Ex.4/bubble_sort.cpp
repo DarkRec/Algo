@@ -1,4 +1,6 @@
 #include <iostream>
+#include <time.h>
+#define size 100000
 
 using namespace std;
 
@@ -77,16 +79,20 @@ void BubbleSort(node *&H)
 int main()
 {
     node *H = NULL;
-    Add(H, 1);
-    Add(H, 3);
-    Add(H, 2);
-    Add(H, 5);
-    Add(H, 7);
-    Add(H, 10);
+    for (int i = 0; i < size; i++)
+    {
+        Add(H, rand() % 100);
+    }
 
-    Show(H);
+    // Show(H);
+
+    clock_t start = clock();
     BubbleSort(H);
-    Show(H);
-    // system("pause");
+    clock_t end = clock();
+
+    double elapsed = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Time measured: " << elapsed << "seconds.\n";
+    // Show(H);
+    //  system("pause");
     return 0;
 }
