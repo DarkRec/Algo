@@ -1,0 +1,23 @@
+Metoda zachłanna
+Metoda dziel i zwyciężaj
+W jakich algorytmach są
+
+Algorytm prima i algorytm Kruskala określają minimalne drzewo rozpinające
+
+Algorytm prima
+1.Lista sąsiedztwa grafu
+2.Tablica kolorów
+biały - wierzchołek nieodwiedzony
+szary - który jest w algorytmie
+czarny - został obsłużony
+3.Lista wynikowa
+
+Wierzchołek startowy s
+zmieniamy kolor z białego na szaary koor[s]=1
+
+
+Algorytm Kruskala
+1. Tablica kolorów
+2. Tablica lasów
+3. Lista posortowanych krawędzi
+4. Lista wynikowa krawędzi
