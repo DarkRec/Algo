@@ -207,22 +207,34 @@ node *Reverse_Connect_lists(node *&H)
     }
 }
 
+void AddToEnd(node *&H, int x)
+{
+    node *p = H;
+    while (p->next)
+    {
+        p = p->next;
+    }
+    node *e = new node;
+    e->val = x;
+    e->next = NULL;
+    p->next = e;
+}
+
 node *Add_sum_to_end(node *&H)
 {
     if (H != NULL)
     {
-        node *Hc = Clone(H);
-        Add(Hc, 0);
-        node *p = Hc;
+        Add(H, 0);
+        node *p = H;
         node *Sum = NULL;
         while (p->next && p->next->next)
         {
-            Add(Sum, (p->next->val + p->next->next->val));
+            AddToEnd(Sum, (p->next->val + p->next->next->val));
             p = p->next->next;
         }
-        p->next = Reverse(Sum);
-        Hc = Hc->next;
-        return Hc;
+        p->next = Sum;
+        H = H->next;
+        return H;
     }
 }
 
@@ -248,10 +260,10 @@ int main()
     //  node *A = Clone_list(H);
     //  node *R = Reverse_clone(H);
     //  Show(R);
-    node *Con = Connect_lists(H);
+    // node *Con = Connect_lists(H);
     // node *Con = Reverse_Connect_lists(H);
-    Show(Con);
-    // node *Aste = Add_sum_to_end(Con);
-    // Show(Aste);
+    // Show(Con);
+    node *Aste = Add_sum_to_end(H);
+    Show(Aste);
     // Add_copy_to_end(H);
 }

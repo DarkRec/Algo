@@ -91,6 +91,42 @@ void printBT(const tree *node)
     printBT("", node, false);
 }
 
+void DeleteLeafs(tree *node)
+{
+    if (node->R == NULL && node->L == NULL)
+    {
+        if (node->Up->L == node)
+            node->Up->L = NULL;
+        else
+            node->Up->R = NULL;
+    }
+    if (node->L != NULL)
+        DeleteLeafs(node->L);
+    if (node->R != NULL)
+        DeleteLeafs(node->R);
+}
+
+void SearchTreeAndDelete(tree *&T, int val)
+{
+    if (T != NULL)
+    {
+        if (T->val == val)
+        {
+            while (T->L || T->R)
+            {
+                DeleteLeafs(T);
+            }
+        }
+        else
+        {
+            if (T->L)
+                SearchTreeAndDelete(T->L, val);
+            if (T->R)
+                SearchTreeAndDelete(T->R, val);
+        }
+    }
+}
+
 int main()
 {
     tree *root = NULL;
@@ -102,10 +138,14 @@ int main()
     Insert(root, 6);
     Insert(root, 5);
     Insert(root, 8);
-    Insert(root, 7);
+    Insert(root, 7);`
     // cout<<root->val<<endl<<root->R->val<<endl<<root->L->val<<endl<<root->R->L->val;
     // printBT(root);
-    RotateRightUp(root);
+    // RotateRightUp(root);
+    printBT(root);
+    SearchTreeAndDelete(root, 6);
+    // DeleteLeafs(root);
+    cout << endl;
     printBT(root);
     // InOrder(root);
     return 0;

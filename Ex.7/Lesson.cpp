@@ -58,7 +58,7 @@ void AddAndShift(node *&tail, node *&src)
     src = src->next;
 }
 
-node *Merge(node *H, node *&H1, node *&H2) // Połączenie dwóch list w jedną (dodanie drugiej na koniec pierwszej)
+node *Merge(node *&H, node *&H1, node *&H2) // Połączenie dwóch list w jedną (dodanie drugiej na koniec pierwszej)
 {
     node *tmp1 = H1;
     node *tmp2 = H2;
@@ -107,7 +107,6 @@ void MS(node *H)
 int main()
 {
     node *H = NULL;
-    Add(H, 7);
     Add(H, 4);
     Add(H, 12);
     Add(H, -6);

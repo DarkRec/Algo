@@ -33,7 +33,7 @@ void Show(node *H)
     while (p != NULL)
     {
 
-        cout << p->val << "->";
+        cout << "(" << p->val << ")->";
         p = p->next;
     }
     cout << "NULL" << endl;
@@ -108,8 +108,7 @@ node *CombSort(node *H, int gap)
             e = e->next;
             b = b->next;
         }
-        gap = gap / 1.3;
-        CombSort(H, gap - 1);
+        CombSort(H, gap / 1.3 - 1);
     }
     else if (gap == 1)
     {
@@ -135,14 +134,28 @@ node *CombSortStart(node *H)
 int main()
 {
     node *H = NULL;
-    Add(H, 8);
-    Add(H, -6);
     Add(H, 3);
     Add(H, 4);
-    Add(H, 15);
+    Add(H, 8);
     Add(H, 5);
-    Add(H, 22);
+    Add(H, 6);
+    Add(H, 2);
+    Add(H, 4);
+    Add(H, 3);
     Show(H);
+    cout << endl;
     H = CombSortStart(H);
-    Show(H);
+    // Show(H);
+}
+
+
+void FarSwap(node *p)
+{
+    e=p->next->next;
+    node *b = e->next->next;
+    node *a = p->next;
+    p->next = e->next;
+    e->next = a;
+    p->next->next = a->next;
+    a->next = b;
 }

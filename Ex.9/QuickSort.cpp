@@ -47,11 +47,26 @@ int PartitionByLeft(int *t, int l, int r)
     return j;
 }
 
+int partition(int *t, int l, int r)
+{
+    int x = t[r];
+    int i = l - 1;
+    for (int j = 1; j < r; j++)
+        if (t[j] < x)
+        {
+            i++;
+            swap(t[i], t[j]);
+        }
+    swap(t[i + 1], t[r]);
+    return i + 1;
+}
+
 void QuickSort(int *t, int L, int R)
 {
     if (L < R)
     {
         int p = PartitionByRight(t, L, R);
+        cout << "p:  " << p << endl;
         QuickSort(t, L, p - 1);
         QuickSort(t, p + 1, R);
     }
@@ -62,13 +77,10 @@ int main()
     srand(time(NULL));
     const int size = 8;
 
-    int tab[size];
-    for (int i = 0; i < size; i++)
-    {
-        tab[i] = rand() % 100;
-    }
-    QuickSort(tab, 0, size - 1);
+    int tab[14] = {10, 5, 2, 3, 12, 7, 19, 5, 1, 3, 12, 6, 4, 2};
+
+    QuickSort(tab, 2, 7);
     cout << endl;
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < 14; i++)
         cout << tab[i] << " ";
 }
