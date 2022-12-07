@@ -11,7 +11,30 @@ struct tree
     tree *L;
 };
 
-void printAVL(string sp, string sn, tree *root)
+class AVLTree
+{
+public:
+    tree *root;
+    AVLTree()
+    {
+        root = NULL;
+    }
+    void RR(tree *A);
+    void LL(tree *A);
+    void RL(tree *A);
+    void LR(tree *A);
+    void Add(int num);
+    void insertAVL(int k);
+    tree *Minimum(tree *node);
+    tree *Maximum(tree *node);
+    tree *After(tree *node);
+    tree *Before(tree *node);
+    tree *BeforeImp(tree *node);
+    tree *Remove(tree *node);
+    tree *RemoveImp(tree *node);
+};
+
+void printAVL(string sp, string sn, tree *node)
 {
     string cr, cl, cp;
     cr = cl = cp = "  ";
@@ -22,20 +45,20 @@ void printAVL(string sp, string sn, tree *root)
 
     string s;
 
-    if (root)
+    if (node)
     {
         s = sp;
         if (sn == cr)
             s[s.length() - 2] = ' ';
-        printAVL(s + cp, cr, root->R);
+        printAVL(s + cp, cr, node->R);
 
         s = s.substr(0, sp.length() - 2);
-        cout << s << sn << root->val << ":" << root->bf << endl;
+        cout << s << sn << node->val << ":" << node->bf << endl;
 
         s = sp;
         if (sn == cl)
             s[s.length() - 2] = ' ';
-        printAVL(s + cp, cl, root->L);
+        printAVL(s + cp, cl, node->L);
     }
 }
 
@@ -51,21 +74,19 @@ void printBT(const string &prefix, const tree *node, bool isLeft)
     }
 }
 
-//=========================================
-
-tree *Find(tree *&root, int val)
+tree *Find(tree *node, int search)
 {
-    if (val == root->val)
-        return root;
-    else if (val < root->val)
-        Find(root->L, val);
-    else if (val > root->val)
-        Find(root->R, val);
+    if (search == node->val)
+        return node;
+    else if (search < node->val)
+        Find(node->L, search);
+    else if (search > node->val)
+        Find(node->R, search);
 }
 
 //=========================================
 
-void RR(tree *&root, tree *A)
+void AVLTree::RR(tree *A)
 {
     tree *B = A->R;
     tree *p = A->Up;
@@ -96,7 +117,7 @@ void RR(tree *&root, tree *A)
     }
 }
 
-void LL(tree *&root, tree *A)
+void AVLTree::LL(tree *A)
 {
     tree *B = A->L;
     tree *p = A->Up;
@@ -127,7 +148,7 @@ void LL(tree *&root, tree *A)
     }
 }
 
-void RL(tree *&root, tree *A)
+void AVLTree::RL(tree *A)
 {
     tree *B = A->R;
     tree *C = B->L;
@@ -164,7 +185,7 @@ void RL(tree *&root, tree *A)
     C->bf = 0;
 }
 
-void LR(tree *&root, tree *A)
+void AVLTree::LR(tree *A)
 {
     tree *B = A->L;
     tree *C = B->R;
@@ -203,14 +224,15 @@ void LR(tree *&root, tree *A)
 
 //=========================================
 
-void Add(tree *&root, int val)
+void AVLTree::Add(int num)
 {
     tree *w = new tree();
     w->L = NULL;
     w->R = NULL;
     w->Up = NULL;
-    w->val = val;
+    w->val = num;
     w->bf = 0;
+
     tree *p = root;
 
     if (p == NULL)
@@ -219,7 +241,7 @@ void Add(tree *&root, int val)
     {
         while (p)
         {
-            if (val < p->val)
+            if (num < p->val)
             {
                 if (p->L == NULL)
                 {
@@ -258,18 +280,18 @@ void Add(tree *&root, int val)
                     if (r->R == p)
                         r->bf = 0;
                     else if (p->bf == -1)
-                        LR(root, r);
+                        LR(r);
                     else
-                        LL(root, r);
+                        LL(r);
                 }
                 else
                 {
                     if (r->L == p)
                         r->bf = 0;
                     else if (p->bf == 1)
-                        RL(root, r);
+                        RL(r);
                     else
-                        RR(root, r);
+                        RR(r);
                 }
                 break;
             };
@@ -287,22 +309,22 @@ void Add(tree *&root, int val)
 
 //=========================================
 
-tree *Minimum(tree *root)
+tree *AVLTree::Minimum(tree *node)
 {
-    if (root != NULL)
+    if (node != NULL)
     {
-        tree *p = root;
+        tree *p = node;
         while (p->L)
             p = p->L;
         return p;
     }
 }
 
-tree *Maximum(tree *root)
+tree *AVLTree::Maximum(tree *node)
 {
-    if (root != NULL)
+    if (node != NULL)
     {
-        tree *p = root;
+        tree *p = node;
         while (p->R)
             p = p->R;
         return p;
@@ -311,15 +333,15 @@ tree *Maximum(tree *root)
 
 //=========================================
 
-tree *After(tree *root)
+tree *AVLTree::After(tree *node)
 {
-    if (root != NULL)
+    if (node != NULL)
     {
-        if (root->R)
-            return Minimum(root->R);
+        if (node->R)
+            return Minimum(node->R);
         else
         {
-            tree *p = root;
+            tree *p = node;
             if (p->Up->L == p)
             {
                 return p->Up;
@@ -341,15 +363,15 @@ tree *After(tree *root)
     }
 }
 
-tree *Before(tree *root)
+tree *AVLTree::Before(tree *node)
 {
-    if (root != NULL)
+    if (node != NULL)
     {
-        if (root->L)
-            return Maximum(root->L);
+        if (node->L)
+            return Maximum(node->L);
         else
         {
-            tree *p = root;
+            tree *p = node;
             if (p->Up->R == p)
             {
                 return p->Up;
@@ -371,7 +393,7 @@ tree *Before(tree *root)
     }
 }
 
-tree *BeforeImp(tree *node) // improved before
+tree *AVLTree::BeforeImp(tree *node) // improved before
 {
     tree *p = node;
     if (p != NULL)
@@ -396,50 +418,52 @@ tree *BeforeImp(tree *node) // improved before
 }
 
 //=========================================
-tree *Remove(tree *&root, tree *x)
+tree *AVLTree::Remove(tree *node)
 {
     tree *y = new tree();
     bool temp;
 
-    if (x->L != NULL || x->R != NULL)
+    if (node->L != NULL || node->R != NULL)
     {
-        y = Remove(root, Before(x));
+        cout << Before(node);
+
+        y = Remove(Before(node));
         temp = false;
     }
     else
     {
-        if (x->L != NULL)
+        if (node->L != NULL)
         {
-            y = x->L;
-            x->L = NULL;
+            y = node->L;
+            node->L = NULL;
         }
         else
         {
-            y = x->R;
-            x->R = NULL;
+            y = node->R;
+            node->R = NULL;
         }
-        x->bf = 0;
+        node->bf = 0;
         temp = true;
     }
 
     if (y != NULL)
     {
-        y->Up = x->Up;
-        y->L = x->L;
+        y->Up = node->Up;
+        y->L = node->L;
         if (y->L != NULL)
             y->L->Up = y;
-        y->R = x->R;
+        y->R = node->R;
         if (y->R != NULL)
             y->R->Up = y;
-        y->bf = x->bf;
+        y->bf = node->bf;
     }
 
-    if (x->Up != NULL)
+    if (node->Up != NULL)
     {
-        if (x->Up->L == x)
-            x->Up->L = y;
+        if (node->Up->L == node)
+            node->Up->L = y;
         else
-            x->Up->R = y;
+            node->Up->R = y;
     }
     else
         root = y;
@@ -449,7 +473,7 @@ tree *Remove(tree *&root, tree *x)
     if (temp == true)
     {
         z = y;
-        y = x->Up;
+        y = node->Up;
         while (y != NULL)
         {
             if (y->bf == 0)
@@ -458,7 +482,7 @@ tree *Remove(tree *&root, tree *x)
                     y->bf = -1;
                 else
                     y->bf = 1;
-                return x;
+                return node;
             }
             else
             {
@@ -472,19 +496,19 @@ tree *Remove(tree *&root, tree *x)
                     if (t->bf != 0)
                     {
                         if (y->bf == 1)
-                            LL(root, y);
+                            LL(y);
                         else
-                            RR(root, y);
-                        return x;
+                            RR(y);
+                        return node;
                     }
                     else
                     {
                         if (y->bf == t->bf)
                         {
                             if (y->bf == 1)
-                                LL(root, y);
+                                LL(y);
                             else
-                                RR(root, y);
+                                RR(y);
                             z = t;
                             y = t->Up;
                             continue;
@@ -502,59 +526,59 @@ tree *Remove(tree *&root, tree *x)
             }
         }
         if (y->bf == 1)
-            LR(root, y);
+            LR(y);
         else
-            RL(root, y);
+            RL(y);
         z = y->Up;
         y = z->Up;
     }
-    return x;
+    return node;
 }
 
-tree *RemoveImp(tree *&root, tree *x) // improved remove
+tree *AVLTree::RemoveImp(tree *node) // improved remove
 {
     tree *y = new tree();
     bool temp;
 
-    if (x->L && x->R)
+    if (node->L && node->R)
     {
-        y = Remove(root, BeforeImp(x));
+        y = Remove(BeforeImp(node));
         temp = false;
     }
     else
     {
-        if (x->L)
+        if (node->L)
         {
-            y = x->L;
-            x->L = NULL;
+            y = node->L;
+            node->L = NULL;
         }
         else
         {
-            y = x->R;
-            x->R = NULL;
+            y = node->R;
+            node->R = NULL;
         }
-        x->bf = 0;
+        node->bf = 0;
         temp = true;
     }
 
     if (y)
     {
-        y->Up = x->Up;
-        y->L = x->L;
+        y->Up = node->Up;
+        y->L = node->L;
         if (y->L)
             y->L->Up = y;
-        y->R = x->R;
+        y->R = node->R;
         if (y->R)
             y->R->Up = y;
-        y->bf = x->bf;
+        y->bf = node->bf;
     }
 
-    if (x->Up)
+    if (node->Up)
     {
-        if (x->Up->L == x)
-            x->Up->L = y;
+        if (node->Up->L == node)
+            node->Up->L = y;
         else
-            x->Up->R = y;
+            node->Up->R = y;
     }
     else
         root = y;
@@ -564,7 +588,7 @@ tree *RemoveImp(tree *&root, tree *x) // improved remove
     if (temp)
     {
         z = y;
-        y = x->Up;
+        y = node->Up;
         while (y)
         {
             if (!y->bf)
@@ -587,17 +611,17 @@ tree *RemoveImp(tree *&root, tree *x) // improved remove
                     if (!t->bf)
                     {
                         if (y->bf == 1)
-                            LL(root, y);
+                            LL(y);
                         else
-                            RR(root, y);
+                            RR(y);
                         break;
                     }
                     else if (y->bf == t->bf)
                     {
                         if (y->bf == 1)
-                            LL(root, y);
+                            LL(y);
                         else
-                            RR(root, y);
+                            RR(y);
                         z = t;
                         y = t->Up;
                         continue;
@@ -605,9 +629,9 @@ tree *RemoveImp(tree *&root, tree *x) // improved remove
                     else
                     {
                         if (y->bf == 1)
-                            LR(root, y);
+                            LR(y);
                         else
-                            RL(root, y);
+                            RL(y);
                         z = y->Up;
                         y = z->Up;
                     }
@@ -621,25 +645,18 @@ tree *RemoveImp(tree *&root, tree *x) // improved remove
             }
         }
     }
-    return x;
+    return node;
 }
 
 //=========================================
 
 int main()
 {
-    int Tk[32]; // tablica kluczy węzłów
-    tree *root = NULL;
+    AVLTree drzewo;
 
     for (int i = 0; i < 32; i++)
-    {
-        Tk[i] = i + 1;
-        Add(root, Tk[i]);
-    }
+        drzewo.Add(i);
 
-    printAVL("", "", root);
-    RemoveImp(root, Find(root, 8));
-    RemoveImp(root, Find(root, 28));
-    Add(root, 18);
-    printAVL("", "", root);
+    // printBT("", drzewo.root, false);
+    printAVL("", "", drzewo.root);
 }
