@@ -1,0 +1,4 @@
+3 5
+A B C D E
+A B A A B
+C A B E A
