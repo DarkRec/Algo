@@ -11,13 +11,10 @@ using namespace std;
 // if (a[L]>a[R]) swap(a[L],a[R])
 // Zaimplementować sortowanie hybrydowe
 
-int PartitionByRight(int *t, int l, int r)
-{
+int PartitionByRight(int* t, int l, int r)  {
     int i = l;
-    for (int j = l; j < r; j++)
-    {
-        if (t[j] < t[r])
-        {
+    for (int j = l; j < r; j++) {
+        if (t[j] < t[r]) {
             swap(t[i], t[j]);
             i++;
         }
@@ -26,43 +23,54 @@ int PartitionByRight(int *t, int l, int r)
     return i;
 }
 
-int PartitionByLeft(int *t, int l, int r)
-{
+int PartitionByLeft(int* t, int l, int r)   {
     int i = l, j = r + 1;
-    while (true)
-    {
-        do
-        {
+    while (true)    {
+        do{
             i++;
         } while (i <= r && t[i] < t[l]);
-        do
-        {
+
+        do{
             j--;
         } while (t[j] > t[l]);
+
         if (i > j)
             break;
+
         swap(t[i], t[j]);
     }
     swap(t[j], t[l]);
     return j;
 }
 
-int partition(int *t, int l, int r)
-{
-    int x = t[r];
-    int i = l - 1;
-    for (int j = 1; j < r; j++)
-        if (t[j] < x)
-        {
+int partitionMedianOf3(int* t, int l, int r) {
+    int i, j, v, x;
+    int mid = l + (r - l) / 2;
+
+    if (t[l] > t[mid]) swap(t[l], t[mid]);
+    if (t[l] > t[r]) swap(t[l], t[r]);
+    if (t[mid] > t[r]) swap(t[mid], t[r]);
+
+    v = t[mid]; i = l - 1; j = r + 1;
+    while (true)
+    {
+        do {
             i++;
-            swap(t[i], t[j]);
+        } while (t[i] < v);
+
+        do {
+            j--;
+        } while (t[j] > v);
+
+        if (i >= j) {
+            return j;
         }
-    swap(t[i + 1], t[r]);
-    return i + 1;
+
+        swap(t[i], t[j]);
+    }
 }
 
-void QuickSort(int *t, int L, int R)
-{
+void QuickSort(int* t, int L, int R){
     if (L < R)
     {
         int p = PartitionByRight(t, L, R);
@@ -77,9 +85,9 @@ int main()
     srand(time(NULL));
     const int size = 8;
 
-    int tab[14] = {10, 5, 2, 3, 12, 7, 19, 5, 1, 3, 12, 6, 4, 2};
+    int tab[14] = { 10, 5, 2, 3, 12, 7, 19, 5, 1, 3, 12, 6, 4, 2 };
 
-    QuickSort(tab, 2, 7);
+    QuickSort(tab, 0, 13);
     cout << endl;
     for (int i = 0; i < 14; i++)
         cout << tab[i] << " ";
